@@ -1,0 +1,118 @@
+#include <iostream>
+#include <fstream>
+using namespace std;
+
+class temp {
+    string rollNum, name, fname, address, vsearch;
+    fstream file;
+public:
+    void addStu();
+    void viewStu();
+    void searchStu();
+};
+
+void temp::addStu() {
+    cout << "Enter Student Roll Number: ";
+    cin >> rollNum;
+    cout << "Enter Student Name: ";
+    cin >> name;
+    cout << "Enter the Student's Father Name: ";
+    cin >> fname;
+    cout << "Enter the Student Address: ";
+    cin >> address;
+
+    file.open("stuData.txt", ios::out | ios::app);
+    file << rollNum << '*';
+    file << name << '*';
+    file << fname << '*';
+    file << address << endl;
+    file.close();
+}
+
+void temp::viewStu() {
+    file.open("stuData.txt", ios::in);
+    if (!file) {
+        cout << "No records found." << endl;
+        return;
+    }
+
+    while (getline(file, rollNum, '*')) {
+        getline(file, name, '*');
+        getline(file, fname, '*');
+        getline(file, address, '\n');
+
+        cout << "\nStudent Name: " << name << endl;
+        cout << "Student Roll Number: " << rollNum << endl;
+        cout << "Student's Father Name: " << fname << endl;
+        cout << "Student Address: " << address << endl;
+    }
+    file.close();
+}
+
+void temp::searchStu() {
+    cout << "Enter Student Roll Number: ";
+    cin >> vsearch;
+
+    file.open("stuData.txt", ios::in);
+    if (!file) {
+        cout << "No records found." << endl;
+        return;
+    }
+
+    bool found = false;
+    while (getline(file, rollNum, '*')) {
+        getline(file, name, '*');
+        getline(file, fname, '*');
+        getline(file, address, '\n');
+
+        if (rollNum == vsearch) {
+            cout << endl;
+            cout << "Student Name: " << name << endl;
+            cout << "Student Roll Number: " << rollNum << endl;
+            cout << "Student's Father Name: " << fname << endl;
+            cout << "Student Address: " << address << endl;
+            found = true;
+            break; // Exit the loop after finding the student
+        }
+    }
+
+    if (!found) {
+        cout << "Student with Roll Number " << vsearch << " not found." << endl;
+    }
+
+    file.close();
+}
+
+int main() {
+    char choice;
+    temp obj;
+
+    do {
+        cout << "\nMenu:" << endl;
+        cout << "1- Add Student Record" << endl;
+        cout << "2- View All Student Record" << endl;
+        cout << "3- Search Student Record" << endl;
+        cout << "4- Exit" << endl;
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+        case '1':
+            obj.addStu();
+            break;
+        case '2':
+            obj.viewStu();
+            break;
+        case '3':
+            obj.searchStu();
+            break;
+        case '4':
+            cout << "Exiting..." << endl;
+            break;
+        default:
+            cout << "Invalid Choice...!" << endl;
+        }
+    } while (choice != '4');
+
+    return 0;
+}
